@@ -7,6 +7,7 @@ from pprint import pprint
 import schedule
 import time
 from psycopg2 import sql
+import csv
 
 load_dotenv()
 
@@ -39,11 +40,21 @@ def cot_bitcoin():
             bitcoin_data = data["data"]["BTC"]
             brl_quote = bitcoin_data["quote"]["BRL"]
 
-            # pprint(brl_quote)
-            pprint(brl_quote["price"])
-            pprint(brl_quote["last_updated"])
-            pprint(brl_quote["volume_24h"])
-            pprint(brl_quote["market_cap"])
+            with open('bitcoin.csv', 'a', newline='') as csvfile:
+                # Initialize the writer
+                spamwriter = csv.writer(csvfile, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+                
+                # # Write the header row (optional, depends on what you want)
+                # spamwriter.writerow(['Price' ,'volume_24h' ,'market_cap' , 'last_update' ])
+
+                # Write the 'price' value
+                spamwriter.writerow([brl_quote['price'] , brl_quote['volume_24h'] , brl_quote['market_cap'] , brl_quote['last_updated']])  # Fix: passed as a list to writerow
+            
+                # pprint(brl_quote)
+                # pprint(brl_quote["price"])
+                # pprint(brl_quote["last_updated"])
+                # pprint(brl_quote["volume_24h"])
+                # pprint(brl_quote["market_cap"])
         else:
             print('Erro de status na cotação do bitcoin')
             
